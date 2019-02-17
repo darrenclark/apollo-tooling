@@ -6,12 +6,17 @@ import {
   ProposedFeatures,
   TextDocuments,
   FileChangeType,
-  ServerCapabilities
+  ServerCapabilities,
+  Diagnostic,
+  TextDocument
 } from "vscode-languageserver";
 import { QuickPickItem } from "vscode";
 import { GraphQLWorkspace } from "./workspace";
 import { GraphQLLanguageProvider } from "./languageProvider";
 import { LanguageServerLoadingHandler } from "./loadingHandler";
+import { readFileSync } from "fs";
+import URI from "vscode-uri";
+import { collectConfigDiagnostics } from "./config/validation";
 
 const connection = createConnection(ProposedFeatures.all);
 
@@ -126,8 +131,19 @@ documents.onDidChangeContent(params => {
 
 connection.onDidChangeWatchedFiles(params => {
   for (const { uri, type } of params.changes) {
-    if (uri.endsWith("apollo.config.js") || uri.endsWith(".env")) {
+    if (uri.includes("apollo.config") || uri.endsWith(".env")) {
       workspace.reloadProjectForConfig(uri);
+    }
+
+    if (uri.includes("apollo.config")) {
+      const path = URI.parse(uri).fsPath;
+      const text = readFileSync(path).toString();
+      const config = require(path);
+      const document = TextDocument.create(uri, "javascript", 1, text);
+      connection.sendDiagnostics({
+        uri,
+        diagnostics: collectConfigDiagnostics(config, document)
+      });
     }
 
     // Don't respond to changes in files that are currently open,

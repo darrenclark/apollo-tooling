@@ -4,7 +4,8 @@ import {
   ClientServiceConfig,
   LocalServiceConfig,
   ServiceConfig,
-  ApolloConfigFormat
+  ApolloConfigFormat,
+  RemoteServiceConfig
 } from "./config";
 import { ServiceSpecifier, ServiceIDAndTag } from "../engine";
 import URI from "vscode-uri";
@@ -17,6 +18,12 @@ export function isLocalServiceConfig(
   config: ClientServiceConfig
 ): config is LocalServiceConfig {
   return !!(config as LocalServiceConfig).localSchemaFile;
+}
+
+export function isRemoteServiceConfig(
+  config: ClientServiceConfig
+): config is RemoteServiceConfig {
+  return !!(config as RemoteServiceConfig).url;
 }
 
 export function isServiceConfig(config: ApolloConfig): config is ServiceConfig {
@@ -35,7 +42,7 @@ export function getServiceName(config: ApolloConfigFormat) {
   if (config.service) return config.service.name;
   if (config.client) {
     if (typeof config.client.service === "string") {
-      return parseServiceSpecificer(config.client
+      return parseServiceSpecifier(config.client
         .service as ServiceSpecifier)[0];
     }
     return config.client.service && config.client.service.name;
@@ -44,7 +51,7 @@ export function getServiceName(config: ApolloConfigFormat) {
   }
 }
 
-export function parseServiceSpecificer(specifier: ServiceSpecifier) {
+export function parseServiceSpecifier(specifier: ServiceSpecifier) {
   const [id, tag] = specifier.split("@").map(x => x.trim());
   return [id, tag] as ServiceIDAndTag;
 }

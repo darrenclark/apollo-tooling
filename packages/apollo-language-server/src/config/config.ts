@@ -10,7 +10,7 @@ import URI from "vscode-uri";
 import {
   getServiceName,
   projectsFromConfig,
-  parseServiceSpecificer
+  parseServiceSpecifier
 } from "./utils";
 
 export interface EngineStatsWindow {
@@ -146,7 +146,7 @@ export class ApolloConfig {
     if (this._tag) return this._tag;
     let tag: string = "current";
     if (this.client && typeof this.client.service === "string") {
-      const specifierTag = parseServiceSpecificer(this.client
+      const specifierTag = parseServiceSpecifier(this.client
         .service as ServiceSpecifier)[1];
       if (specifierTag) tag = specifierTag;
     }
