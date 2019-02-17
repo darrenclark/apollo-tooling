@@ -7,11 +7,7 @@ import {
   StatsWindowSize
 } from "../engine";
 import URI from "vscode-uri";
-import {
-  getServiceName,
-  projectsFromConfig,
-  parseServiceSpecifier
-} from "./utils";
+import { getServiceName, parseServiceSpecifier } from "./utils";
 
 export interface EngineStatsWindow {
   to: number;
@@ -135,7 +131,12 @@ export class ApolloConfig {
   }
 
   get projects() {
-    return projectsFromConfig(this.rawConfig, this.configURI);
+    const configs = [];
+    const { client, service } = this.rawConfig;
+    if (client) configs.push(new ClientConfig(this.rawConfig, this.configURI));
+    if (service)
+      configs.push(new ServiceConfig(this.rawConfig, this.configURI));
+    return configs;
   }
 
   set tag(tag: string) {
