@@ -4,6 +4,7 @@
 
 - `apollo`
   - Add `ApolloConfig` type to exports from `apollo` [#1413](https://github.com/apollographql/apollo-tooling/pull/1413)
+  - Add `service:delete-tag` and tests [#1417](https://github.com/apollographql/apollo-tooling/pull/1417)
 - `apollo-codegen-core`
   - <First `apollo-codegen-core` related entry goes here>
 - `apollo-codegen-flow`
@@ -20,6 +21,7 @@
   - <First `apollo-graphql` related entry goes here>
 - `apollo-language-server`
   - Add error message for service lookup failure [#1413](https://github.com/apollographql/apollo-tooling/pull/1413)
+  - Add `deleteSchemaTag` to engine wrapper. [#1417](https://github.com/apollographql/apollo-tooling/pull/1417)
 - `apollo-tools`
   - <First `apollo-tools` related entry goes here>
 - `vscode-apollo`
